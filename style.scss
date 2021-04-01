@@ -11,6 +11,7 @@ $def-font: "Averia Serif Libre", cursive;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 html {
   background-color: $bg-color;
@@ -97,17 +98,6 @@ main {
     2px 2px 2px rgba(206, 89, 55, 0);
 }
 
-@media only screen and (max-width: 1000px) {
-  main {
-    width: 600px;
-    height: auto;
-  }
-  .key {
-    & > kbd {
-      font-size: 50px;
-    }
-  }
-}
 .history {
   width: 100%;
   color: #fff;
@@ -118,6 +108,7 @@ main {
 }
 
 .btn {
+  -webkit-tap-highlight-color: transparent;
   background-color: black;
   border: none;
   color: rgb(200, 200, 200);
@@ -130,7 +121,10 @@ main {
   text-transform: capitalize;
   transition: all 0.07s;
 }
+.btn:focus,
 .btn:active {
+  outline: 0;
+  border: none;
   transform: scale(0.9);
   box-shadow: 0 0 5px #fff, 0 0 10px rgb(3, 0, 0), 0 0 15px #fff,
     0 0 20px #49ff18, 0 0 30px #49ff18, 0 0 40px #49ff18, 0 0 55px #49ff18,
@@ -149,8 +143,12 @@ main {
 
 @media only screen and (max-width: 500px) {
   header {
-    top: 0;
+    top: 40px;
     font-size: 25px;
+  }
+
+  main {
+    width: 100%;
   }
   .key {
     & > kbd {
@@ -160,12 +158,18 @@ main {
 
   .btn {
     padding: 10px;
-    font-size: 20px;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
   }
 
   .history {
     padding: 10px;
     font-size: 20px;
-    width: 350px;
+  }
+
+  .sound {
+    font-size: 12px;
+    margin-top: 20px;
   }
 }
