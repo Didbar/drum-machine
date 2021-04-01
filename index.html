@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Drum Machine</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Drum Machine</h1>
+    </header>
+    <main class="main">
+        <div class="drum-machine">
+            <div data-key="81" class="key">
+                <kbd>Q</kbd>
+                <span class="sound">Heater-1</span>
+            </div>
+            <div data-key="87" class="key">
+                <kbd>W</kbd>
+                <span class="sound">Heater-2</span>
+            </div>
+            <div data-key="69" class="key">
+                <kbd>E</kbd>
+                <span class="sound">Heater-3</span>
+            </div>
+
+            <div data-key="65" class="key">
+                <kbd>A</kbd>
+                <span class="sound">Heater-4</span>
+            </div>
+            <div data-key="83" class="key">
+                <kbd>S</kbd>
+                <span class="sound">Clap</span>
+            </div>
+            <div data-key="68" class="key">
+                <kbd>D</kbd>
+                <span class="sound">Open-HH</span>
+            </div>
+
+            <div data-key="90" class="key">
+                <kbd>Z</kbd>
+                <span class="sound">Kick-n</span>
+            </div>
+            <div data-key="88" class="key">
+                <kbd>X</kbd>
+                <span class="sound">Kick</span>
+            </div>
+            <div data-key="67" class="key">
+                <kbd>C</kbd>
+                <span class="sound">Snare</span>
+            </div>
+        </div>
+
+        <section class="history">
+            <div class="buttons">
+
+                <button class="btn btn--play" id="history_play">Play History</button>
+                <button class="btn btn--clear" id="history_clear">Clear History</button>
+            </div>
+            <div id="history_id">
+            </div>
+        </section>
+
+        <section class="audios">
+            <audio data-key="81" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3"></audio>
+            <audio data-key="87" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3"></audio>
+            <audio data-key="69" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3"></audio>
+            <audio data-key="65" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3"></audio>
+            <audio data-key="83" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3"></audio>
+            <audio data-key="68" src="https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3"></audio>
+            <audio data-key="90" src="https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3"></audio>
+            <audio data-key="88" src="https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3"></audio>
+            <audio data-key="67" src="https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3"></audio>
+        </section>
+    </main>
+    <script>
+        let HISTORY = [];
+        let historyObj = {
+            'Q': 81,
+            'W': 87,
+            'E': 69,
+            'A': 65,
+            'S': 83,
+            'D': 68,
+            'Z': 90,
+            'X': 88,
+            'C': 57
+        }
+
+        function playSound(e) {
+            let clickedValue = '';
+            if (e.type === 'click') {
+                clickedValue = Number(e.target.parentNode.attributes[0].value);
+            }
+
+            let keyCode = e.keyCode;
+
+            if (clickedValue) keyCode = clickedValue;
+
+
+            const history = document.getElementById('history_id');
+
+
+
+            const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+            const key = document.querySelector(`.key[data-key="${keyCode}"]`);
+            key && HISTORY.push(key.children[0].textContent);
+            const historySpans = HISTORY.map(item => `<span>${item}</span>`)
+            history.innerHTML = historySpans;
+
+
+
+            if (!audio) return;
+            audio.currentTime = 0;
+            audio.play();
+            key.classList.add('playing');
+            setTimeout(() => {
+                key.classList.remove('playing')
+            }, 500)
+        }
+        function removeTransition(e) {
+            if (e.propertyName !== 'transform') return;
+            e.target.classList.remove('playing')
+        }
+
+        function playHistory() {
+            const history = HISTORY.map(h => h = historyObj[h])
+            let index = 0;
+            const interval = setInterval(() => {
+                const audio = document.querySelector(`audio[data-key="${history[index]}"]`);
+                if (!audio) clearInterval(interval);
+                else {
+
+                    audio.currentTime = 0;
+                    audio.play();
+                    index++;
+                }
+            }, 600);
+
+
+
+
+
+        }
+        function clearHistory() {
+            HISTORY = [];
+            const historyId = document.getElementById('history_id');
+            historyId.innerHTML = ''
+        }
+
+        const keys = document.querySelectorAll('.key');
+        keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+        keys.forEach(key => key.addEventListener('click', playSound))
+
+        const playHistoryDiv = document.getElementById('history_play');
+        const clearHistoryDiv = document.getElementById('history_clear');
+        playHistoryDiv.addEventListener('click', playHistory);
+        clearHistoryDiv.addEventListener('click', clearHistory);
+
+
+        window.addEventListener('keydown', playSound);
+
+
+    </script>
+</body>
+
+</html>
